@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class PointHistoryManager {
-    private PointHistoryTable pointHistoryTable;
+    private final PointHistoryTable pointHistoryTable;
 
     public void append(long id, long amount, TransactionType type, long updateMillis) {
         pointHistoryTable.insert(id, amount, type, updateMillis);
