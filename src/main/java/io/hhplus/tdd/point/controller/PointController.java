@@ -2,6 +2,8 @@ package io.hhplus.tdd.point.controller;
 
 import io.hhplus.tdd.point.entity.PointHistory;
 import io.hhplus.tdd.point.entity.UserPoint;
+import io.hhplus.tdd.point.service.PointService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +12,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/point")
+@RequiredArgsConstructor
 public class PointController {
+
+    private final PointService pointService;
 
     private static final Logger log = LoggerFactory.getLogger(PointController.class);
 
@@ -21,7 +26,7 @@ public class PointController {
     public UserPoint point(
             @PathVariable long id
     ) {
-        return new UserPoint(0, 0, 0);
+        return pointService.read(id);
     }
 
     /**
@@ -31,7 +36,7 @@ public class PointController {
     public List<PointHistory> history(
             @PathVariable long id
     ) {
-        return List.of();
+        return pointService.readHistory(id);
     }
 
     /**
