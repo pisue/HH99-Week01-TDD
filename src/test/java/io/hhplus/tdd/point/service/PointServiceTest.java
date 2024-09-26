@@ -110,18 +110,22 @@ class PointServiceTest {
     void use_shouldUpdateUserPoint() {
         //given
         long userId = 1L;
-        long useAmount = 500L;
-        UserPoint expectedUserPoint = new UserPoint(userId, 0L, System.currentTimeMillis());
-        when(pointManager.use(userId, useAmount)).thenReturn(expectedUserPoint);
+        long amount = 500L;
+        UserPoint existUserPoint = new UserPoint(userId, 1000L, System.currentTimeMillis());
+        long existAmount = existUserPoint.point();
+        long updateAmount = existAmount - amount;
+        UserPoint expectedUserPoint = new UserPoint(userId, updateAmount, System.currentTimeMillis());
+        when(pointReader.read(userId)).thenReturn(existUserPoint);
+        when(pointManager.use(userId, amount)).thenReturn(expectedUserPoint);
 
         //when
-        UserPoint result = pointService.use(userId, useAmount);
+        UserPoint result = pointService.use(userId, amount);
 
         //then
         verify(pointManager, times(1))
-                .use(eq(userId), eq(useAmount));
+                .use(eq(userId), eq(amount));
         verify(pointHistoryManager, times(1))
-                .append(eq(userId), eq(useAmount), eq(TransactionType.USE), anyLong());
+                .append(eq(userId), eq(amount), eq(TransactionType.USE), anyLong());
         assertEquals(expectedUserPoint, result);
     }
 
